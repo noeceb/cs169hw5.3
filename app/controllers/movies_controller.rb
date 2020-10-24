@@ -7,15 +7,48 @@ class MoviesController < ApplicationController
   end
 
   def index
+    @isTitleHilite = false
+    @isDateHilite = false
     @all_ratings = Movie.all_ratings
-    list = params[:ratings]
-    if list == nil
-      list = []
+    
+    allRatings = params[:ratings]
+    if allRatings == nil
+      allRatings = []
     else
-      list = list.keys
+      allRatings = allRatings.keys
     end
-    @ratings_to_show = list
-    @movies = Movie.with_ratings(list)
+    @ratings_to_show = allRatings
+    
+    if params[:ratings] != nil
+      params[:ratings].each do |r|
+        @collectionRatings = params[:ratings]
+        session[:collectionRatings] = @collectionRatings
+      end
+    end
+    
+    @movies = Movie.with_ratings(allRatings)
+    if params[:m] != nil
+      session[:m] = params[:m]
+    end
+    if params[:r] != nil
+      session[:r] = params[:r]
+    end
+    
+    @map = {}
+    @ratings_to_show.each do |i|
+      @map[i] = i
+    end
+   
+    #sorting by name and/or date
+    if params[:m] != nil
+      @isTitleHilite = true
+      @isDateHilite = false
+      @movies = @movies.order('title ASC')
+    elsif params[:r] != nil
+      @isTitleHilite = false
+      @isDateHilite = true
+      @movies = @movies.order('release_date ASC')
+    end
   end
 
   def new
