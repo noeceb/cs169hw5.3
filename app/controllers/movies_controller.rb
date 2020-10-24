@@ -11,13 +11,13 @@ class MoviesController < ApplicationController
     @isDateHilite = false
     @all_ratings = Movie.all_ratings
     
-    allRatings = params[:ratings]
-    if allRatings == nil
-      allRatings = []
+    allRatingsMovie = params[:ratings]
+    if allRatingsMovie == nil
+      allRatingsMovie = []
     else
-      allRatings = allRatings.keys
+      allRatingsMovie = allRatingsMovie.keys
     end
-    @ratings_to_show = allRatings
+    @ratings_to_show = allRatingsMovie
     
     if params[:ratings] != nil
       params[:ratings].each do |r|
@@ -26,7 +26,7 @@ class MoviesController < ApplicationController
       end
     end
     
-    @movies = Movie.with_ratings(allRatings)
+    @movies = Movie.with_ratings(allRatingsMovie)
     if params[:m] != nil
       session[:m] = params[:m]
     end
